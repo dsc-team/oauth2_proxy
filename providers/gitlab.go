@@ -56,3 +56,19 @@ func (p *GitLabProvider) GetEmailAddress(s *SessionState) (string, error) {
 	}
 	return json.Get("email").String()
 }
+
+func (p *GitLabProvider) GetUserName(s *SessionState) (string, error) {
+
+	req, err := http.NewRequest("GET",
+		p.ValidateURL.String()+"?access_token="+s.AccessToken, nil)
+	if err != nil {
+		log.Printf("failed building request %s", err)
+		return "", err
+	}
+	json, err := api.Request(req)
+	if err != nil {
+		log.Printf("failed making request %s", err)
+		return "", err
+	}
+	return json.Get("username").String()
+}
